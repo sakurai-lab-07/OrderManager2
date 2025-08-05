@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Order {
   id: number;
@@ -83,12 +84,12 @@ export default function DisplayPage() {
         {/* フッター */}
         <div className="mt-16 text-center">
           <div className="mt-4 space-x-4">
-            <a
+            <Link
               href="/"
               className="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
             >
               注文画面へ
-            </a>
+            </Link>
           </div>
         </div>
       </div>
