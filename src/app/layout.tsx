@@ -1,6 +1,7 @@
 import React from "react";
 import "./globals.css";
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "学祭屋台注文システム",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className="bg-white text-black min-h-screen">{children}</body>
+      <body className="bg-white text-black min-h-screen">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

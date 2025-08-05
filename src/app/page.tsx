@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 interface Order {
@@ -23,7 +24,6 @@ export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [lastOrderNumber, setLastOrderNumber] = useState<number | null>(null);
 
   // 注文一覧を取得
   const fetchOrders = async () => {
@@ -54,12 +54,22 @@ export default function Home() {
 
       if (response.ok) {
         const newOrder = await response.json();
-        setLastOrderNumber(newOrder.orderNumber);
         setQuantity(1);
         fetchOrders();
+
+        // Toast通知で注文完了を表示
+        toast.success("注文が完了しました！", {
+          description: `番号: ${newOrder.orderNumber
+            .toString()
+            .padStart(3, "0")} (${quantity}個)`,
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error("Failed to create order:", error);
+      toast.error("注文に失敗しました", {
+        description: "もう一度お試しください",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -82,9 +92,25 @@ export default function Home() {
 
       if (response.ok) {
         fetchOrders();
+
+        // ステータス変更の通知
+        if (status === "ready") {
+          toast.success("調理完了しました！", {
+            description: "お客様をお呼びしてください",
+          });
+        } else if (status === "completed") {
+          toast.success("注文が完了しました", {
+            description: "ありがとうございました",
+          });
+        }
+      } else {
+        throw new Error("Status update failed");
       }
     } catch (error) {
       console.error("Failed to update order status:", error);
+      toast.error("ステータス更新に失敗しました", {
+        description: "もう一度お試しください",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -107,10 +133,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-6 flex justify-between items-center">
             <div className="text-center flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">
-                学祭屋台注文システム
-              </h1>
-              <p className="text-gray-600 mt-2">担々麺専門店</p>
+              <h1 className="text-3xl font-bold text-gray-900">注文システム</h1>
             </div>
             <Link
               href="/display"
@@ -196,16 +219,6 @@ export default function Home() {
               >
                 {isLoading ? "注文中..." : "注文する"}
               </Button>
-
-              {/* 注文完了メッセージ */}
-              {lastOrderNumber && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-                  <div className="text-green-800 font-semibold">注文完了！</div>
-                  <div className="text-xl font-bold text-green-900 mt-1">
-                    番号: {lastOrderNumber.toString().padStart(3, "0")}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
