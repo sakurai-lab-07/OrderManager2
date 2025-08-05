@@ -215,7 +215,7 @@ export default function Home() {
               <Button
                 onClick={createOrder}
                 disabled={isLoading}
-                className="w-full bg-black text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className="w-full bg-black py-3 px-4 rounded-lg font-medium disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? "注文中..." : "注文する"}
               </Button>
@@ -251,13 +251,13 @@ export default function Home() {
                             : "--:--:--"}
                         </div>
                       </div>
-                      <button
+                      <Button
                         onClick={() => updateOrderStatus(order.id, "ready")}
                         disabled={isLoading}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                        className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
                       >
                         調理完了
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -298,13 +298,13 @@ export default function Home() {
                             : "--:--:--"}
                         </div>
                       </div>
-                      <button
+                      <Button
                         onClick={() => updateOrderStatus(order.id, "completed")}
                         disabled={isLoading}
-                        className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                        className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
                       >
                         受け取り完了
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
