@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Order {
   id: number;
@@ -145,6 +147,18 @@ export default function Home() {
         </div>
       </header>
 
+      <div className="grid w-full max-w-7xl items-start mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertTitle>注意</AlertTitle>
+          <AlertDescription>
+            <p>
+              このシステムは現在開発中です。最終版とは異なる場合があります。
+            </p>
+          </AlertDescription>
+        </Alert>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 統計情報 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -193,7 +207,7 @@ export default function Home() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  数量 (最大5個)
+                  数量 (最大7杯)
                 </label>
                 <Select
                   value={quantity.toString()}
@@ -203,9 +217,9 @@ export default function Home() {
                     <SelectValue placeholder="数量を選択" />
                   </SelectTrigger>
                   <SelectContent>
-                    {[1, 2, 3, 4, 5].map((num) => (
+                    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                       <SelectItem key={num} value={num.toString()}>
-                        {num}個
+                        {num}杯
                       </SelectItem>
                     ))}
                   </SelectContent>

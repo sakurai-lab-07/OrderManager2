@@ -64,7 +64,7 @@ export default function DisplayPage() {
                     : "---"}
                 </div>
                 <div className="text-xl font-semibold text-gray-600">
-                  {order.quantity}個
+                  {order.quantity}杯
                 </div>
               </div>
             ))}
