@@ -4,8 +4,23 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "学祭屋台注文システム",
-  description: "担々麺注文システム",
+  title: "注文管理システム",
+  description: "注文管理システム",
+  applicationName: "注文管理システム",
+  keywords: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+  creator: "Hamaryo226, sakurai-lab-07",
+  authors: [
+    { name: "Hamaryo226", url: "https://github.com/Hamaryo226" },
+    { name: "sakurai-lab-07", url: "https://github.com/sakurai-lab-07" },
+  ],
+  publisher: "Render",
+  generator: "Next.js",
+  appleWebApp: {
+    capable: true,
+    title: "注文管理システム",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: { telephone: false, address: false, email: false },
 };
 
 export default function RootLayout({
