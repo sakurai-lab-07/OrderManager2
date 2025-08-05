@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -111,12 +112,12 @@ export default function Home() {
               </h1>
               <p className="text-gray-600 mt-2">担々麺専門店</p>
             </div>
-            <a
+            <Link
               href="/display"
               className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
             >
               ディスプレイ専用
-            </a>
+            </Link>
           </div>
         </div>
       </header>
