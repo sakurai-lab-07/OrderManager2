@@ -42,3 +42,37 @@ export async function PATCH(
     );
   }
 }
+
+// 注文削除用のDELETEエンドポイント
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const orderId = parseInt(id);
+
+    if (!orderId) {
+      return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
+    }
+
+    const deleteOrder = db.prepare(`
+      DELETE FROM orders 
+      WHERE id = ?
+    `);
+
+    const result = deleteOrder.run(orderId);
+
+    if (result.changes === 0) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react";
+import {
+  AlertCircleIcon,
+  CheckCircle2Icon,
+  PopcornIcon,
+  X,
+} from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Order {
@@ -111,6 +116,43 @@ export default function Home() {
     } catch (error) {
       console.error("Failed to update order status:", error);
       toast.error("ステータス更新に失敗しました", {
+        description: "もう一度お試しください",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 注文を削除（取消し）
+  const deleteOrder = async (orderId: number, orderNumber: number) => {
+    if (
+      !confirm(
+        `注文番号 ${orderNumber
+          .toString()
+          .padStart(3, "0")} を取り消しますか？\nこの操作は取り消せません。`
+      )
+    ) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        fetchOrders();
+        toast.success("注文を取り消しました", {
+          description: `番号: ${orderNumber.toString().padStart(3, "0")}`,
+          duration: 3000,
+        });
+      } else {
+        throw new Error("Delete failed");
+      }
+    } catch (error) {
+      console.error("Failed to delete order:", error);
+      toast.error("注文の取り消しに失敗しました", {
         description: "もう一度お試しください",
       });
     } finally {
@@ -265,13 +307,27 @@ export default function Home() {
                             : "--:--:--"}
                         </div>
                       </div>
-                      <Button
-                        onClick={() => updateOrderStatus(order.id, "ready")}
-                        disabled={isLoading}
-                        className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
-                      >
-                        調理完了
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() =>
+                            deleteOrder(order.id, order.orderNumber)
+                          }
+                          disabled={isLoading}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                          取消
+                        </Button>
+                        <Button
+                          onClick={() => updateOrderStatus(order.id, "ready")}
+                          disabled={isLoading}
+                          className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
+                        >
+                          調理完了
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -312,13 +368,29 @@ export default function Home() {
                             : "--:--:--"}
                         </div>
                       </div>
-                      <Button
-                        onClick={() => updateOrderStatus(order.id, "completed")}
-                        disabled={isLoading}
-                        className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
-                      >
-                        受け取り完了
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() =>
+                            deleteOrder(order.id, order.orderNumber)
+                          }
+                          disabled={isLoading}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                          取消
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            updateOrderStatus(order.id, "completed")
+                          }
+                          disabled={isLoading}
+                          className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
+                        >
+                          受け取り完了
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
