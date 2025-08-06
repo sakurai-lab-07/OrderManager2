@@ -47,7 +47,11 @@ export default function DisplayPage() {
           <div className="py-8 text-center">
             <h1 className="text-5xl font-bold mb-4">呼び出し番号</h1>
             <div className="text-gray-500 text-lg">
-              自動更新中 - {new Date().toLocaleTimeString("ja-JP")}
+              自動更新中 -{" "}
+              {new Date().toLocaleTimeString("ja-JP", {
+                timeZone: "Asia/Tokyo",
+                hour12: false,
+              })}
             </div>
           </div>
         </div>

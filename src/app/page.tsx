@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
 import {
   Select,
   SelectContent,
@@ -169,7 +168,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* ヘッダー */}
       <Header />
 
       {/* メインコンテンツエリア */}
@@ -290,9 +288,16 @@ export default function Home() {
                           </div>
                           <div className="text-sm text-gray-500">
                             {order.createdAt
-                              ? new Date(order.createdAt).toLocaleTimeString(
-                                  "ja-JP"
-                                )
+                              ? (() => {
+                                  const date = new Date(order.createdAt);
+                                  return date.toLocaleTimeString("ja-JP", {
+                                    timeZone: "Asia/Tokyo",
+                                    hour12: false,
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                  });
+                                })()
                               : "--:--:--"}
                           </div>
                         </div>
@@ -353,9 +358,16 @@ export default function Home() {
                           </div>
                           <div className="text-sm text-green-600">
                             {order.createdAt
-                              ? new Date(order.createdAt).toLocaleTimeString(
-                                  "ja-JP"
-                                )
+                              ? (() => {
+                                  const date = new Date(order.createdAt);
+                                  return date.toLocaleTimeString("ja-JP", {
+                                    timeZone: "Asia/Tokyo",
+                                    hour12: false,
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                  });
+                                })()
                               : "--:--:--"}
                           </div>
                         </div>
