@@ -63,7 +63,7 @@ export default function DisplayPage() {
           {/* 呼び出し中の注文 */}
           {readyOrders.length > 0 && (
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-center mb-6 text-green-600">
+              <h2 className="text-3xl font-bold mb-6 text-green-600">
                 呼び出し中
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
@@ -91,7 +91,7 @@ export default function DisplayPage() {
           {/* 調理中の注文 */}
           {pendingOrders.length > 0 && (
             <div className="mb-12">
-              <h2 className="text-3xl font-bold text-center mb-6 text-orange-600">
+              <h2 className="text-3xl font-bold mb-6 text-orange-600">
                 調理中
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
