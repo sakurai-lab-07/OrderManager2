@@ -38,3 +38,6 @@ next-env.d.ts
 # database
 database.sqlite
 database.sqlite-journal
+
+# build info (generated automatically)
+src/lib/build-info.json

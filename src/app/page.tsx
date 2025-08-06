@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Footer from "@/components/Footer";
 
 interface Order {
   id: number;
@@ -171,7 +172,7 @@ export default function Home() {
   const readyOrders = orders.filter((order) => order.status === "ready");
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* ヘッダー */}
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -181,7 +182,7 @@ export default function Home() {
             </div>
             <Link
               href="/display"
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              className="bg-neutral-800 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 transition-colors text-sm"
             >
               ディスプレイ専用
             </Link>
@@ -189,220 +190,232 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="grid w-full max-w-7xl items-start mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Alert variant="destructive">
-          <AlertCircleIcon />
-          <AlertTitle>注意</AlertTitle>
-          <AlertDescription>
-            <p>
-              このシステムは現在開発中です。最終版とは異なる場合があります。
-            </p>
-          </AlertDescription>
-        </Alert>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 統計情報 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">調理中</h3>
-            <div className="text-3xl font-bold text-orange-600">
-              {pendingOrders.length}
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              呼び出し中
-            </h3>
-            <div className="text-3xl font-bold text-green-600">
-              {readyOrders.length}
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              総注文数
-            </h3>
-            <div className="text-3xl font-bold text-blue-600">
-              {orders.length}
-            </div>
-          </div>
+      {/* メインコンテンツエリア */}
+      <div className="flex-1">
+        <div className="grid w-full max-w-7xl items-start mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <Alert variant="destructive">
+            <AlertCircleIcon />
+            <AlertTitle>注意</AlertTitle>
+            <AlertDescription>
+              <p>
+                このシステムは現在開発中です。最終版とは異なる場合があります。
+              </p>
+            </AlertDescription>
+          </Alert>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 注文作成フォーム */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-              新規注文
-            </h2>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* 統計情報 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                調理中
+              </h3>
+              <div className="text-3xl font-bold text-orange-600">
+                {pendingOrders.length}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                呼び出し中
+              </h3>
+              <div className="text-3xl font-bold text-green-600">
+                {readyOrders.length}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                総注文数
+              </h3>
+              <div className="text-3xl font-bold text-blue-600">
+                {orders.length}
+              </div>
+            </div>
+          </div>
 
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  商品
-                </label>
-                <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 text-center">
-                  <span className="text-lg font-medium text-gray-800">
-                    担々麺
-                  </span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 注文作成フォーム */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+                新規注文
+              </h2>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    商品
+                  </label>
+                  <div className="p-4 border border-gray-200 rounded-lg bg-gray-50 text-center">
+                    <span className="text-lg font-medium text-gray-800">
+                      担々麺
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  数量 (最大7杯)
-                </label>
-                <Select
-                  value={quantity.toString()}
-                  onValueChange={(value) => setQuantity(Number(value))}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    数量 (最大7杯)
+                  </label>
+                  <Select
+                    value={quantity.toString()}
+                    onValueChange={(value) => setQuantity(Number(value))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="数量を選択" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                        <SelectItem key={num} value={num.toString()}>
+                          {num}杯
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button
+                  onClick={createOrder}
+                  disabled={isLoading}
+                  className="w-full bg-black py-3 px-4 rounded-lg font-medium disabled:cursor-not-allowed transition-colors"
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="数量を選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                      <SelectItem key={num} value={num.toString()}>
-                        {num}杯
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  {isLoading ? "注文中..." : "注文する"}
+                </Button>
               </div>
+            </div>
 
-              <Button
-                onClick={createOrder}
-                disabled={isLoading}
-                className="w-full bg-black py-3 px-4 rounded-lg font-medium disabled:cursor-not-allowed transition-colors"
-              >
-                {isLoading ? "注文中..." : "注文する"}
-              </Button>
+            {/* 調理中の注文 */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+                調理中
+              </h2>
+
+              {pendingOrders.length > 0 ? (
+                <div className="space-y-4">
+                  {pendingOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="text-xl font-bold text-gray-900">
+                            {order.orderNumber
+                              ? order.orderNumber.toString().padStart(3, "0")
+                              : "---"}
+                          </div>
+                          <div className="text-gray-600">
+                            {order.quantity}個
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {order.createdAt
+                              ? new Date(order.createdAt).toLocaleTimeString(
+                                  "ja-JP"
+                                )
+                              : "--:--:--"}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() =>
+                              deleteOrder(order.id, order.orderNumber)
+                            }
+                            disabled={isLoading}
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                            取消
+                          </Button>
+                          <Button
+                            onClick={() => updateOrderStatus(order.id, "ready")}
+                            disabled={isLoading}
+                            className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
+                          >
+                            調理完了
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  調理中の注文はありません
+                </div>
+              )}
+            </div>
+
+            {/* 呼び出し中の注文 */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+                呼び出し中
+              </h2>
+
+              {readyOrders.length > 0 ? (
+                <div className="space-y-4">
+                  {readyOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="border border-green-200 bg-green-50 rounded-lg p-4"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="text-xl font-bold text-green-800">
+                            {order.orderNumber
+                              ? order.orderNumber.toString().padStart(3, "0")
+                              : "---"}
+                          </div>
+                          <div className="text-green-700">
+                            {order.quantity}個
+                          </div>
+                          <div className="text-sm text-green-600">
+                            {order.createdAt
+                              ? new Date(order.createdAt).toLocaleTimeString(
+                                  "ja-JP"
+                                )
+                              : "--:--:--"}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() =>
+                              deleteOrder(order.id, order.orderNumber)
+                            }
+                            disabled={isLoading}
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                            取消
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              updateOrderStatus(order.id, "completed")
+                            }
+                            disabled={isLoading}
+                            className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
+                          >
+                            受け取り完了
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  呼び出し中の注文はありません
+                </div>
+              )}
             </div>
           </div>
-
-          {/* 調理中の注文 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-              調理中
-            </h2>
-
-            {pendingOrders.length > 0 ? (
-              <div className="space-y-4">
-                {pendingOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="text-xl font-bold text-gray-900">
-                          {order.orderNumber
-                            ? order.orderNumber.toString().padStart(3, "0")
-                            : "---"}
-                        </div>
-                        <div className="text-gray-600">{order.quantity}個</div>
-                        <div className="text-sm text-gray-500">
-                          {order.createdAt
-                            ? new Date(order.createdAt).toLocaleTimeString(
-                                "ja-JP"
-                              )
-                            : "--:--:--"}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() =>
-                            deleteOrder(order.id, order.orderNumber)
-                          }
-                          disabled={isLoading}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                          取消
-                        </Button>
-                        <Button
-                          onClick={() => updateOrderStatus(order.id, "ready")}
-                          disabled={isLoading}
-                          className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
-                        >
-                          調理完了
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                調理中の注文はありません
-              </div>
-            )}
-          </div>
-
-          {/* 呼び出し中の注文 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-              呼び出し中
-            </h2>
-
-            {readyOrders.length > 0 ? (
-              <div className="space-y-4">
-                {readyOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="border border-green-200 bg-green-50 rounded-lg p-4"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="text-xl font-bold text-green-800">
-                          {order.orderNumber
-                            ? order.orderNumber.toString().padStart(3, "0")
-                            : "---"}
-                        </div>
-                        <div className="text-green-700">{order.quantity}個</div>
-                        <div className="text-sm text-green-600">
-                          {order.createdAt
-                            ? new Date(order.createdAt).toLocaleTimeString(
-                                "ja-JP"
-                              )
-                            : "--:--:--"}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() =>
-                            deleteOrder(order.id, order.orderNumber)
-                          }
-                          disabled={isLoading}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                          取消
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            updateOrderStatus(order.id, "completed")
-                          }
-                          disabled={isLoading}
-                          className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
-                        >
-                          受け取り完了
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                呼び出し中の注文はありません
-              </div>
-            )}
-          </div>
         </div>
+        {/* メインコンテンツエリア終了 */}
       </div>
+
+      <Footer />
     </div>
   );
 }
