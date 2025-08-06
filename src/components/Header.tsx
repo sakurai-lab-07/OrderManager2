@@ -6,7 +6,7 @@ export default function Header() {
     <header className="border-b bg-white px-4 py-3">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <h1 className="text-xl font-bold text-center flex-1 md:text-left md:flex-initial">
-          OderManager2
+          注文管理システム
         </h1>
         <div className="hidden md:block">
           <Button asChild variant="outline">

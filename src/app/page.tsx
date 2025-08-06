@@ -169,50 +169,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-
       {/* メインコンテンツエリア */}
       <div className="flex-1">
-        <div className="grid w-full max-w-7xl items-start mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Alert variant="destructive">
-            <AlertCircleIcon />
-            <AlertTitle>注意</AlertTitle>
-            <AlertDescription>
-              <p>
-                このシステムは現在開発中です。最終版とは異なる場合があります。
-              </p>
-            </AlertDescription>
-          </Alert>
-        </div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* 統計情報 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                調理中
-              </h3>
-              <div className="text-3xl font-bold text-orange-600">
-                {pendingOrders.length}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                呼び出し中
-              </h3>
-              <div className="text-3xl font-bold text-green-600">
-                {readyOrders.length}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                総注文数
-              </h3>
-              <div className="text-3xl font-bold text-blue-600">
-                {orders.length}
-              </div>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* 注文作成フォーム */}
             <div className="bg-white rounded-lg shadow-md p-6">
