@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+
 import {
   Select,
   SelectContent,
@@ -11,14 +11,10 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  AlertCircleIcon,
-  CheckCircle2Icon,
-  PopcornIcon,
-  X,
-} from "lucide-react";
+import { AlertCircleIcon, X } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 interface Order {
   id: number;
@@ -174,21 +170,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* ヘッダー */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6 flex justify-between items-center">
-            <div className="text-center flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">注文システム</h1>
-            </div>
-            <Link
-              href="/display"
-              className="bg-neutral-800 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 transition-colors text-sm"
-            >
-              ディスプレイ専用
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* メインコンテンツエリア */}
       <div className="flex-1">

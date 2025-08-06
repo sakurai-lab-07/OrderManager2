@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 
 interface Order {
   id: number;
@@ -127,12 +128,14 @@ export default function DisplayPage() {
           {/* フッター */}
           <div className="mt-16 text-center">
             <div className="mt-4 space-x-4">
-              <Link
-                href="/"
-                className="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                注文画面へ
-              </Link>
+              <Button asChild>
+                <Link
+                  href="/"
+                  className="inline-bloc text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  注文画面へ
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
