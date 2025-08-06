@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className="bg-white text-black min-h-screen">
         {children}
-        <Toaster />
+        <Toaster position="top-center" />
       </body>
     </html>
   );
