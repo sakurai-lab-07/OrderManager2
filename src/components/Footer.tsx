@@ -71,7 +71,7 @@ export default function Footer() {
             </a>
             <span className="text-gray-400">|</span>
             <span className="text-gray-400 text-xs">
-              Sakurai Lab - 学祭屋台注文システム
+              Sakurai Lab - 学祭注文システム
             </span>
           </div>
         </div>

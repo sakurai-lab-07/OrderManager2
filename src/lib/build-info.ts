@@ -7,6 +7,7 @@ export interface BuildInfo {
   repository: string;
 }
 
+// npm run generate-build-info
 export function getBuildInfo(): BuildInfo {
   try {
     // 開発環境では動的にインポート
