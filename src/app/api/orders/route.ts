@@ -56,19 +56,21 @@ export async function POST(request: NextRequest) {
     updateSequence.run();
 
     // 注文を挿入
+    const now = new Date();
+
     const insertOrder = db.prepare(`
-      INSERT INTO orders (order_number, quantity, status)
-      VALUES (?, ?, 'pending')
+      INSERT INTO orders (order_number, quantity, status, created_at)
+      VALUES (?, ?, 'pending', ?)
     `);
 
-    const result = insertOrder.run(newOrderNumber, quantity);
+    const result = insertOrder.run(newOrderNumber, quantity, now.toISOString());
 
     return NextResponse.json({
       id: result.lastInsertRowid,
       orderNumber: newOrderNumber,
       quantity,
       status: "pending",
-      createdAt: new Date().toISOString(),
+      createdAt: now.toISOString(),
     });
   } catch (error) {
     console.error("Database error:", error);
