@@ -20,10 +20,10 @@
 
 - **フロントエンド**: Next.js 15 (App Router), React 18, TypeScript
 - **スタイリング**: Tailwind CSS
-- **データベース**: SQLite (better-sqlite3)
-- **デプロイ**: Render 対応
+- **データベース**: PostgreSQL (Neon)
+- **デプロイ**: Vercel
 
-## セットアップ
+## ローカル開発セットアップ
 
 1. 依存関係のインストール:
 
@@ -31,17 +31,46 @@
 npm install
 ```
 
-2. 開発サーバーの起動:
+2. 環境変数の設定:
+
+`.env.local` ファイルを作成し、以下を設定:
+
+```
+DATABASE_URL=your_neon_database_url_here
+```
+
+3. 開発サーバーの起動:
 
 ```bash
 npm run dev
 ```
 
-3. ブラウザで http://localhost:3000 にアクセス
+4. ブラウザで http://localhost:3000 にアクセス
+
+## Vercel + Neon PostgreSQL デプロイ手順
+
+### 1. Neon データベースの作成
+
+1. [Neon Console](https://console.neon.tech) にログイン
+2. 新しいプロジェクトを作成
+3. 接続文字列（DATABASE_URL）をコピー
+
+### 2. Vercel デプロイ
+
+1. GitHub リポジトリを Vercel に接続
+2. 環境変数 `DATABASE_URL` を設定
+   - Vercel Dashboard > Settings > Environment Variables
+   - Variable: `DATABASE_URL`
+   - Value: Neon からコピーした接続文字列
+3. デプロイを実行
+
+### 3. データベース初期化
+
+初回デプロイ後、データベーステーブルは自動的に作成されます。
 
 ## データベース
 
-SQLite データベースが自動的に作成され、以下のテーブルが使用されます：
+PostgreSQL データベースが使用され、以下のテーブルが自動作成されます：
 
 - `orders`: 注文情報
 - `order_sequence`: 注文番号のシーケンス管理

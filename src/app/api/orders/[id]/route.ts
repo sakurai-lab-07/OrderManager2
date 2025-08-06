@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/database";
+import { pool, initializeDatabase } from "@/lib/database";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await initializeDatabase();
+
     const { status } = await request.json();
     const { id } = await params;
     const orderId = parseInt(id);
@@ -21,19 +23,26 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const updateOrder = db.prepare(`
-      UPDATE orders 
-      SET status = ? 
-      WHERE id = ?
-    `);
+    const client = await pool.connect();
 
-    const result = updateOrder.run(status, orderId);
+    try {
+      const result = await client.query(
+        `
+        UPDATE orders 
+        SET status = $1 
+        WHERE id = $2
+      `,
+        [status, orderId]
+      );
 
-    if (result.changes === 0) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      if (result.rowCount === 0) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
+
+      return NextResponse.json({ success: true });
+    } finally {
+      client.release();
     }
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Database error:", error);
     return NextResponse.json(
@@ -49,6 +58,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await initializeDatabase();
+
     const { id } = await params;
     const orderId = parseInt(id);
 
@@ -56,18 +67,25 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
     }
 
-    const deleteOrder = db.prepare(`
-      DELETE FROM orders 
-      WHERE id = ?
-    `);
+    const client = await pool.connect();
 
-    const result = deleteOrder.run(orderId);
+    try {
+      const result = await client.query(
+        `
+        DELETE FROM orders 
+        WHERE id = $1
+      `,
+        [orderId]
+      );
 
-    if (result.changes === 0) {
-      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      if (result.rowCount === 0) {
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+      }
+
+      return NextResponse.json({ success: true });
+    } finally {
+      client.release();
     }
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Database error:", error);
     return NextResponse.json(
