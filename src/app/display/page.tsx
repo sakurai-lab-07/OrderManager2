@@ -69,7 +69,9 @@ export default function DisplayPage() {
                   >
                     <div className="text-4xl 2xl:text-5xl font-bold mb-3 text-green-800">
                       {order.orderNumber
-                        ? order.orderNumber.toString().padStart(3, "0")
+                        ? order.orderNumber < 100
+                          ? `#${order.orderNumber.toString().padStart(2, "0")}`
+                          : `#${order.orderNumber.toString().padStart(3, "0")}`
                         : "---"}
                     </div>
                     <div className="text-lg 2xl:text-xl font-semibold text-green-700">
@@ -95,7 +97,9 @@ export default function DisplayPage() {
                   >
                     <div className="text-4xl 2xl:text-5xl font-bold mb-3 text-orange-800">
                       {order.orderNumber
-                        ? order.orderNumber.toString().padStart(3, "0")
+                        ? order.orderNumber < 100
+                          ? `#${order.orderNumber.toString().padStart(2, "0")}`
+                          : `#${order.orderNumber.toString().padStart(3, "0")}`
                         : "---"}
                     </div>
                     <div className="text-lg 2xl:text-xl font-semibold text-orange-700">
