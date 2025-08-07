@@ -29,8 +29,15 @@ export async function initializeDatabase() {
             order_number INTEGER NOT NULL,
             quantity INTEGER NOT NULL,
             status TEXT NOT NULL DEFAULT 'pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            deleted_at TIMESTAMP NULL
           )
+        `);
+
+        // 既存のテーブルにdeleted_atカラムを追加（存在しない場合）
+        await client.query(`
+          ALTER TABLE orders 
+          ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP NULL
         `);
 
         // 注文番号のシーケンスを管理するテーブル

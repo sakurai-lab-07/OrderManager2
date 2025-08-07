@@ -17,6 +17,7 @@ export async function GET() {
       const result = await client.query(`
         SELECT * FROM orders 
         WHERE status IN ('pending', 'ready')
+        AND deleted_at IS NULL
         ORDER BY created_at ASC
       `);
 

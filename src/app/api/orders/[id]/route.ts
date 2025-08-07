@@ -30,7 +30,7 @@ export async function PATCH(
         `
         UPDATE orders 
         SET status = $1 
-        WHERE id = $2
+        WHERE id = $2 AND deleted_at IS NULL
       `,
         [status, orderId]
       );
@@ -52,7 +52,7 @@ export async function PATCH(
   }
 }
 
-// 注文削除用のDELETEエンドポイント
+// 注文削除用のDELETEエンドポイント（論理削除）
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -70,10 +70,12 @@ export async function DELETE(
     const client = await pool.connect();
 
     try {
+      // 論理削除：deleted_atに現在時刻を設定
       const result = await client.query(
         `
-        DELETE FROM orders 
-        WHERE id = $1
+        UPDATE orders 
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = $1 AND deleted_at IS NULL
       `,
         [orderId]
       );
