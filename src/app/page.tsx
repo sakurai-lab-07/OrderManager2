@@ -21,8 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { AlertCircleIcon, X } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { X, Plus, CookingPot, Megaphone } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
@@ -176,9 +175,14 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* 注文作成フォーム */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-                新規注文
-              </h2>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="p-2 rounded-md bg-gray-100 text-gray-700">
+                  <Plus className="h-5 w-5" aria-hidden />
+                </span>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  新規注文
+                </h2>
+              </div>
 
               <div className="space-y-6">
                 <div>
@@ -225,9 +229,12 @@ export default function Home() {
 
             {/* 調理中の注文 */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-                調理中
-              </h2>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="p-2 rounded-md bg-gray-100 text-gray-700">
+                  <CookingPot className="h-5 w-5" aria-hidden />
+                </span>
+                <h2 className="text-2xl font-semibold text-gray-800">調理中</h2>
+              </div>
 
               {pendingOrders.length > 0 ? (
                 <div className="space-y-4">
@@ -324,9 +331,14 @@ export default function Home() {
 
             {/* 呼び出し中の注文 */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-                呼び出し中
-              </h2>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="p-2 rounded-md bg-gray-100 text-gray-700">
+                  <Megaphone className="h-5 w-5" aria-hidden />
+                </span>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  呼び出し中
+                </h2>
+              </div>
 
               {readyOrders.length > 0 ? (
                 <div className="space-y-4">
