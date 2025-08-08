@@ -8,6 +8,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AlertCircleIcon, X } from "lucide-react";
@@ -121,16 +132,6 @@ export default function Home() {
 
   // 注文を削除（取消し）
   const deleteOrder = async (orderId: number, orderNumber: number) => {
-    if (
-      !confirm(
-        `注文番号 ${orderNumber
-          .toString()
-          .padStart(3, "0")} を取り消しますか？\nこの操作は取り消せません。`
-      )
-    ) {
-      return;
-    }
-
     setIsLoading(true);
     try {
       const response = await fetch(`/api/orders/${orderId}`, {
@@ -261,18 +262,47 @@ export default function Home() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button
-                            onClick={() =>
-                              deleteOrder(order.id, order.orderNumber)
-                            }
-                            disabled={isLoading}
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                          >
-                            <X className="h-4 w-4" />
-                            取消
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                disabled={isLoading}
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-300 px-2 py-2 hover:text-red-800 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                              >
+                                取消
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  注文を取り消しますか？
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  注文番号{" "}
+                                  {order.orderNumber
+                                    .toString()
+                                    .padStart(3, "0")}{" "}
+                                  を取り消します。
+                                  <br />
+                                  この操作は取り消せません。
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>
+                                  キャンセル
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    deleteOrder(order.id, order.orderNumber)
+                                  }
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  はい
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                           <Button
                             onClick={() => updateOrderStatus(order.id, "ready")}
                             disabled={isLoading}
@@ -331,18 +361,47 @@ export default function Home() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button
-                            onClick={() =>
-                              deleteOrder(order.id, order.orderNumber)
-                            }
-                            disabled={isLoading}
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                          >
-                            <X className="h-4 w-4" />
-                            取消
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                disabled={isLoading}
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-300 px-2 py-2 hover:text-red-800 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
+                              >
+                                取消
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  注文を取り消しますか？
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  注文番号{" "}
+                                  {order.orderNumber
+                                    .toString()
+                                    .padStart(3, "0")}{" "}
+                                  を取り消します。
+                                  <br />
+                                  この操作は取り消せません。
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>
+                                  キャンセル
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() =>
+                                    deleteOrder(order.id, order.orderNumber)
+                                  }
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  取り消し
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                           <Button
                             onClick={() =>
                               updateOrderStatus(order.id, "completed")
