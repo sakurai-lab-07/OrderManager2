@@ -194,7 +194,7 @@ export default function Home() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    数量 (最大7杯)
+                    数量 (最大5杯)
                   </label>
                   <Select
                     value={quantity.toString()}
@@ -204,7 +204,7 @@ export default function Home() {
                       <SelectValue placeholder="数量を選択" />
                     </SelectTrigger>
                     <SelectContent>
-                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                      {[1, 2, 3, 4, 5].map((num) => (
                         <SelectItem key={num} value={num.toString()}>
                           {num}杯
                         </SelectItem>
