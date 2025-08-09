@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { X, Megaphone, Ellipsis, FilePenLine, Undo2 } from "lucide-react";
 import { Order } from "@/types/order";
 
@@ -29,6 +31,7 @@ interface CalloutSectionProps {
   isLoading: boolean;
   onDeleteOrderAction: (orderId: number, orderNumber: number) => void;
   onUpdateOrderStatusAction: (orderId: number, status: Order["status"]) => void;
+  onUpdateOrderQuantity?: (orderId: number, quantity: number) => void;
 }
 
 export default function CalloutSection({
@@ -36,8 +39,32 @@ export default function CalloutSection({
   isLoading,
   onDeleteOrderAction,
   onUpdateOrderStatusAction,
+  onUpdateOrderQuantity,
 }: CalloutSectionProps) {
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [editQuantity, setEditQuantity] = useState<number>(1);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
   const readyOrders = orders.filter((order) => order.status === "ready");
+
+  const handleEditOrder = (order: Order) => {
+    setEditingOrder(order);
+    setEditQuantity(order.quantity);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (
+      editingOrder &&
+      onUpdateOrderQuantity &&
+      editQuantity >= 1 &&
+      editQuantity <= 5
+    ) {
+      onUpdateOrderQuantity(editingOrder.id, editQuantity);
+      setIsEditDialogOpen(false);
+      setEditingOrder(null);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -93,7 +120,9 @@ export default function CalloutSection({
                           <Undo2 />
                           調理中へ戻す
                         </DropdownMenuItem>
-                        <DropdownMenuItem disabled>
+                        <DropdownMenuItem
+                          onSelect={() => handleEditOrder(order)}
+                        >
                           <FilePenLine />
                           編集
                         </DropdownMenuItem>
@@ -150,6 +179,48 @@ export default function CalloutSection({
           呼び出し中の注文はありません
         </div>
       )}
+
+      {/* 編集用ダイアログ */}
+      <AlertDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>注文を編集</AlertDialogTitle>
+            <AlertDialogDescription>
+              注文番号 {editingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
+              の個数を変更できます。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <Label htmlFor="edit-quantity" className="text-sm font-medium">
+              個数
+            </Label>
+            <Input
+              id="edit-quantity"
+              type="number"
+              min="1"
+              max="5"
+              value={editQuantity}
+              onChange={(e) => setEditQuantity(Number(e.target.value))}
+              className="mt-2"
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              1〜5個の範囲で指定してください
+            </p>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsEditDialogOpen(false)}>
+              キャンセル
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleSaveEdit}
+              disabled={editQuantity < 1 || editQuantity > 5}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              保存
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
