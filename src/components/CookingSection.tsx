@@ -89,7 +89,7 @@ export default function CookingSection({
                       ? order.orderNumber.toString().padStart(3, "0")
                       : "---"}
                   </div>
-                  <div className="text-gray-600">{order.quantity}個</div>
+                  <div className="text-gray-600">{order.quantity}杯</div>
                   <div className="text-sm text-gray-500">
                     {order.createdAt
                       ? (() => {
@@ -198,7 +198,7 @@ export default function CookingSection({
               className="mt-2"
             />
             <p className="text-sm text-gray-500 mt-1">
-              1〜5個の範囲で指定してください
+              1〜5の範囲で指定してください
             </p>
           </div>
           <AlertDialogFooter>

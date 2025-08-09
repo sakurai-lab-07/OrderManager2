@@ -48,7 +48,7 @@ export default function Home() {
         toast.success("注文が完了しました！", {
           description: `番号: ${newOrder.orderNumber
             .toString()
-            .padStart(3, "0")} (${quantity}個)`,
+            .padStart(3, "0")} (${quantity}杯)`,
           duration: 5000,
         });
       }
@@ -122,7 +122,7 @@ export default function Home() {
       if (response.ok) {
         fetchOrders();
         toast.success("注文個数を更新しました", {
-          description: `新しい個数: ${quantity}個`,
+          description: `新しい個数: ${quantity}杯`,
         });
       } else {
         throw new Error("Quantity update failed");
