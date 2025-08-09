@@ -13,8 +13,9 @@ export default function Footer() {
 
   const formatBuildTime = (timestamp: string) => {
     try {
-      return new Date(timestamp).toLocaleString("ja-JP", {
-        year: "numeric",
+      const date = new Date(timestamp);
+      // モバイルでは短縮形式を使用
+      return date.toLocaleString("ja-JP", {
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
@@ -31,19 +32,19 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* ビルド情報（1行表示） */}
-          <div className="flex flex-wrap items-center text-sm text-gray-600 gap-1">
-            <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs font-mono">
+          <div className="flex items-center text-xs text-gray-600 gap-0.5 flex-wrap">
+            <span className="bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono">
               v{buildInfo.version}
             </span>
-            <span>・</span>
-            <span className="text-xs">
+            <span className="mx-0.5">・</span>
+            <span className="text-xs whitespace-nowrap">
               {formatBuildTime(buildInfo.buildTime)}
             </span>
-            <span>・</span>
-            <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs font-mono">
+            <span className="mx-0.5">・</span>
+            <span className="bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono">
               {buildInfo.branch}
             </span>
-            <span>・</span>
+            <span className="mx-0.5">・</span>
             <a
               href={getGitHubCommitUrl(
                 buildInfo.repository,
@@ -51,10 +52,10 @@ export default function Footer() {
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs font-mono hover:bg-gray-300 transition-colors inline-flex items-center"
+              className="bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono hover:bg-gray-300 transition-colors inline-flex items-center"
             >
               {buildInfo.shortCommitHash}
-              <ExternalLink className="h-3 w-3 ml-1" />
+              <ExternalLink className="h-2.5 w-2.5 ml-0.5" />
             </a>
           </div>
 

@@ -30,7 +30,7 @@ try {
     shortCommitHash,
     branch,
     buildTime,
-    repository: "Hamaryo226/OderManager2",
+    repository: "sakurai-lab-07/OrderManager2",
   };
 
   // ビルド情報をファイルに保存
@@ -53,7 +53,7 @@ try {
     shortCommitHash: "unknown",
     branch: "unknown",
     buildTime: new Date().toISOString(),
-    repository: "Hamaryo226/OderManager2",
+    repository: "sakurai-lab-07/OrderManager2",
   };
 
   const outputDir = path.join(process.cwd(), "src", "lib");
