@@ -21,6 +21,12 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   formatDetection: { telephone: false, address: false, email: false },
+  robots: {
+    index: false, // noindexの設定
+    googleBot: {
+      index: false, // Google のクローラーをブロック
+    },
+  },
 };
 
 export default function RootLayout({
