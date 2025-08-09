@@ -12,8 +12,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { X, Megaphone } from "lucide-react";
+import { X, Megaphone, Ellipsis, FilePenLine } from "lucide-react";
 import { Order } from "@/types/order";
 
 interface CalloutSectionProps {
@@ -72,17 +80,31 @@ export default function CalloutSection({
                 </div>
                 <div className="flex gap-2">
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        disabled={isLoading}
-                        variant="outline"
-                        size="sm"
-                        className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                        取消
-                      </Button>
-                    </AlertDialogTrigger>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button variant="outline" className="px-2 py-1">
+                          <Ellipsis />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-32">
+                        <DropdownMenuLabel>操作</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem disabled>
+                          <FilePenLine />
+                          調理中へ戻す
+                        </DropdownMenuItem>
+                        <DropdownMenuItem disabled>
+                          <FilePenLine />
+                          編集
+                        </DropdownMenuItem>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem>
+                            <X />
+                            取消
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>
