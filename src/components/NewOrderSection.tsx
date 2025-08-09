@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -12,18 +12,19 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 interface NewOrderSectionProps {
-  quantity: number;
   isLoading: boolean;
-  onQuantityChange: (quantity: number) => void;
-  onCreateOrder: () => void;
+  onCreateOrderAction: (quantity: number) => void;
 }
 
 export default function NewOrderSection({
-  quantity,
   isLoading,
-  onQuantityChange,
-  onCreateOrder,
+  onCreateOrderAction,
 }: NewOrderSectionProps) {
+  const [quantity, setQuantity] = useState(1);
+
+  const handleCreateOrder = () => {
+    onCreateOrderAction(quantity);
+  };
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center gap-2 mb-6">
@@ -49,7 +50,7 @@ export default function NewOrderSection({
           </label>
           <Select
             value={quantity.toString()}
-            onValueChange={(value) => onQuantityChange(Number(value))}
+            onValueChange={(value) => setQuantity(Number(value))}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="数量を選択" />
@@ -65,7 +66,7 @@ export default function NewOrderSection({
         </div>
 
         <Button
-          onClick={onCreateOrder}
+          onClick={handleCreateOrder}
           disabled={isLoading}
           className="w-full bg-black py-3 px-4 rounded-lg font-medium disabled:cursor-not-allowed transition-colors"
         >

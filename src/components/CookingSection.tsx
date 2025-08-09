@@ -19,15 +19,15 @@ import { Order } from "@/types/order";
 interface CookingSectionProps {
   orders: Order[];
   isLoading: boolean;
-  onDeleteOrder: (orderId: number, orderNumber: number) => void;
-  onUpdateOrderStatus: (orderId: number, status: Order["status"]) => void;
+  onDeleteOrderAction: (orderId: number, orderNumber: number) => void;
+  onUpdateOrderStatusAction: (orderId: number, status: Order["status"]) => void;
 }
 
 export default function CookingSection({
   orders,
   isLoading,
-  onDeleteOrder,
-  onUpdateOrderStatus,
+  onDeleteOrderAction,
+  onUpdateOrderStatusAction,
 }: CookingSectionProps) {
   const pendingOrders = orders.filter((order) => order.status === "pending");
 
@@ -100,7 +100,7 @@ export default function CookingSection({
                         <AlertDialogCancel>キャンセル</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() =>
-                            onDeleteOrder(order.id, order.orderNumber)
+                            onDeleteOrderAction(order.id, order.orderNumber)
                           }
                           className="bg-red-600 hover:bg-red-700"
                         >
@@ -110,7 +110,7 @@ export default function CookingSection({
                     </AlertDialogContent>
                   </AlertDialog>
                   <Button
-                    onClick={() => onUpdateOrderStatus(order.id, "ready")}
+                    onClick={() => onUpdateOrderStatusAction(order.id, "ready")}
                     disabled={isLoading}
                     className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:cursor-not-allowed transition-colors"
                   >

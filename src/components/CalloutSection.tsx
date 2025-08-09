@@ -19,15 +19,15 @@ import { Order } from "@/types/order";
 interface CalloutSectionProps {
   orders: Order[];
   isLoading: boolean;
-  onDeleteOrder: (orderId: number, orderNumber: number) => void;
-  onUpdateOrderStatus: (orderId: number, status: Order["status"]) => void;
+  onDeleteOrderAction: (orderId: number, orderNumber: number) => void;
+  onUpdateOrderStatusAction: (orderId: number, status: Order["status"]) => void;
 }
 
 export default function CalloutSection({
   orders,
   isLoading,
-  onDeleteOrder,
-  onUpdateOrderStatus,
+  onDeleteOrderAction,
+  onUpdateOrderStatusAction,
 }: CalloutSectionProps) {
   const readyOrders = orders.filter((order) => order.status === "ready");
 
@@ -100,7 +100,7 @@ export default function CalloutSection({
                         <AlertDialogCancel>キャンセル</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() =>
-                            onDeleteOrder(order.id, order.orderNumber)
+                            onDeleteOrderAction(order.id, order.orderNumber)
                           }
                           className="bg-red-600 hover:bg-red-700"
                         >
@@ -110,7 +110,9 @@ export default function CalloutSection({
                     </AlertDialogContent>
                   </AlertDialog>
                   <Button
-                    onClick={() => onUpdateOrderStatus(order.id, "completed")}
+                    onClick={() =>
+                      onUpdateOrderStatusAction(order.id, "completed")
+                    }
                     disabled={isLoading}
                     className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed transition-colors"
                   >

@@ -11,7 +11,6 @@ import { Order } from "@/types/order";
 
 export default function Home() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   // 注文一覧を取得
@@ -28,7 +27,7 @@ export default function Home() {
   };
 
   // 新しい注文を作成
-  const createOrder = async () => {
+  const createOrder = async (quantity: number) => {
     if (quantity < 1 || quantity > 5) return;
 
     setIsLoading(true);
@@ -43,7 +42,6 @@ export default function Home() {
 
       if (response.ok) {
         const newOrder = await response.json();
-        setQuantity(1);
         fetchOrders();
 
         // Toast通知で注文完了を表示
@@ -147,22 +145,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <NewOrderSection
-              quantity={quantity}
               isLoading={isLoading}
-              onQuantityChange={setQuantity}
-              onCreateOrder={createOrder}
+              onCreateOrderAction={(quantity: number) => createOrder(quantity)}
             />
             <CookingSection
               orders={orders}
               isLoading={isLoading}
-              onDeleteOrder={deleteOrder}
-              onUpdateOrderStatus={updateOrderStatus}
+              onDeleteOrderAction={deleteOrder}
+              onUpdateOrderStatusAction={updateOrderStatus}
             />
             <CalloutSection
               orders={orders}
               isLoading={isLoading}
-              onDeleteOrder={deleteOrder}
-              onUpdateOrderStatus={updateOrderStatus}
+              onDeleteOrderAction={deleteOrder}
+              onUpdateOrderStatusAction={updateOrderStatus}
             />
           </div>
         </div>
