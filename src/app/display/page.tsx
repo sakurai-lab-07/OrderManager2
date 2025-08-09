@@ -80,7 +80,21 @@ export default function DisplayPage() {
                         : "---"}
                     </div>
                     <div className="text-lg 2xl:text-xl font-semibold text-green-700">
-                      {order.quantity}杯
+                      ({order.quantity})
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {order.createdAt
+                        ? (() => {
+                            const date = new Date(order.createdAt);
+                            return date.toLocaleTimeString("ja-JP", {
+                              timeZone: "Asia/Tokyo",
+                              hour12: false,
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            });
+                          })()
+                        : "--:--:--"}
                     </div>
                   </div>
                 ))}
@@ -108,7 +122,21 @@ export default function DisplayPage() {
                         : "---"}
                     </div>
                     <div className="text-lg 2xl:text-xl font-semibold text-orange-700">
-                      {order.quantity}杯
+                      ({order.quantity})
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {order.createdAt
+                        ? (() => {
+                            const date = new Date(order.createdAt);
+                            return date.toLocaleTimeString("ja-JP", {
+                              timeZone: "Asia/Tokyo",
+                              hour12: false,
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            });
+                          })()
+                        : "--:--:--"}
                     </div>
                   </div>
                 ))}

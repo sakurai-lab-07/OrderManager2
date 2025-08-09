@@ -48,7 +48,7 @@ export default function Home() {
         toast.success("注文が完了しました！", {
           description: `番号: ${newOrder.orderNumber
             .toString()
-            .padStart(3, "0")} (${quantity}個)`,
+            .padStart(3, "0")} (${quantity}杯)`,
           duration: 5000,
         });
       }
@@ -89,6 +89,10 @@ export default function Home() {
           toast.success("注文が完了しました", {
             description: "ありがとうございました",
           });
+        } else if (status === "pending") {
+          toast.success("調理中に戻しました", {
+            description: "注文ステータスを変更しました",
+          });
         }
       } else {
         throw new Error("Status update failed");
@@ -96,6 +100,36 @@ export default function Home() {
     } catch (error) {
       console.error("Failed to update order status:", error);
       toast.error("ステータス更新に失敗しました", {
+        description: "もう一度お試しください",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 注文個数を更新
+  const updateOrderQuantity = async (orderId: number, quantity: number) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quantity }),
+      });
+
+      if (response.ok) {
+        fetchOrders();
+        toast.success("注文個数を更新しました", {
+          description: `新しい個数: ${quantity}杯`,
+        });
+      } else {
+        throw new Error("Quantity update failed");
+      }
+    } catch (error) {
+      console.error("Failed to update order quantity:", error);
+      toast.error("個数更新に失敗しました", {
         description: "もう一度お試しください",
       });
     } finally {
@@ -153,12 +187,14 @@ export default function Home() {
               isLoading={isLoading}
               onDeleteOrderAction={deleteOrder}
               onUpdateOrderStatusAction={updateOrderStatus}
+              onUpdateOrderQuantity={updateOrderQuantity}
             />
             <CalloutSection
               orders={orders}
               isLoading={isLoading}
               onDeleteOrderAction={deleteOrder}
               onUpdateOrderStatusAction={updateOrderStatus}
+              onUpdateOrderQuantity={updateOrderQuantity}
             />
           </div>
         </div>

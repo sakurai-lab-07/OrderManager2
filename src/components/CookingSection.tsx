@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,8 +12,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { X, CookingPot } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { X, CookingPot, Ellipsis, FilePenLine } from "lucide-react";
 import { Order } from "@/types/order";
 
 interface CookingSectionProps {
@@ -21,6 +31,7 @@ interface CookingSectionProps {
   isLoading: boolean;
   onDeleteOrderAction: (orderId: number, orderNumber: number) => void;
   onUpdateOrderStatusAction: (orderId: number, status: Order["status"]) => void;
+  onUpdateOrderQuantity?: (orderId: number, quantity: number) => void;
 }
 
 export default function CookingSection({
@@ -28,8 +39,32 @@ export default function CookingSection({
   isLoading,
   onDeleteOrderAction,
   onUpdateOrderStatusAction,
+  onUpdateOrderQuantity,
 }: CookingSectionProps) {
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [editQuantity, setEditQuantity] = useState<number>(1);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
   const pendingOrders = orders.filter((order) => order.status === "pending");
+
+  const handleEditOrder = (order: Order) => {
+    setEditingOrder(order);
+    setEditQuantity(order.quantity);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (
+      editingOrder &&
+      onUpdateOrderQuantity &&
+      editQuantity >= 1 &&
+      editQuantity <= 5
+    ) {
+      onUpdateOrderQuantity(editingOrder.id, editQuantity);
+      setIsEditDialogOpen(false);
+      setEditingOrder(null);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -54,7 +89,7 @@ export default function CookingSection({
                       ? order.orderNumber.toString().padStart(3, "0")
                       : "---"}
                   </div>
-                  <div className="text-gray-600">{order.quantity}個</div>
+                  <div className="text-gray-600">{order.quantity}杯</div>
                   <div className="text-sm text-gray-500">
                     {order.createdAt
                       ? (() => {
@@ -72,17 +107,29 @@ export default function CookingSection({
                 </div>
                 <div className="flex gap-2">
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        disabled={isLoading}
-                        variant="outline"
-                        size="sm"
-                        className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:cursor-not-allowed transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                        取消
-                      </Button>
-                    </AlertDialogTrigger>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button variant="outline" className="px-2 py-1">
+                          <Ellipsis />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-32">
+                        <DropdownMenuLabel>操作</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onSelect={() => handleEditOrder(order)}
+                        >
+                          <FilePenLine />
+                          編集
+                        </DropdownMenuItem>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem>
+                            <X />
+                            取消
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>
@@ -104,7 +151,7 @@ export default function CookingSection({
                           }
                           className="bg-red-600 hover:bg-red-700"
                         >
-                          取り消し
+                          はい
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -126,6 +173,48 @@ export default function CookingSection({
           調理中の注文はありません
         </div>
       )}
+
+      {/* 編集用ダイアログ */}
+      <AlertDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>注文を編集</AlertDialogTitle>
+            <AlertDialogDescription>
+              注文番号 {editingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
+              の個数を変更できます。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <Label htmlFor="edit-quantity" className="text-sm font-medium">
+              個数
+            </Label>
+            <Input
+              id="edit-quantity"
+              type="number"
+              min="1"
+              max="5"
+              value={editQuantity}
+              onChange={(e) => setEditQuantity(Number(e.target.value))}
+              className="mt-2"
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              1〜5の範囲で指定してください
+            </p>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsEditDialogOpen(false)}>
+              キャンセル
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleSaveEdit}
+              disabled={editQuantity < 1 || editQuantity > 5}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              保存
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
