@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { X, Megaphone, Ellipsis, FilePenLine } from "lucide-react";
+import { X, Megaphone, Ellipsis, FilePenLine, Undo2 } from "lucide-react";
 import { Order } from "@/types/order";
 
 interface CalloutSectionProps {
@@ -86,11 +86,11 @@ export default function CalloutSection({
                           <Ellipsis />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-32">
+                      <DropdownMenuContent className="w-36">
                         <DropdownMenuLabel>操作</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem disabled>
-                          <FilePenLine />
+                          <Undo2 />
                           調理中へ戻す
                         </DropdownMenuItem>
                         <DropdownMenuItem disabled>
@@ -126,7 +126,7 @@ export default function CalloutSection({
                           }
                           className="bg-red-600 hover:bg-red-700"
                         >
-                          取り消し
+                          はい
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
