@@ -89,6 +89,10 @@ export default function Home() {
           toast.success("注文が完了しました", {
             description: "ありがとうございました",
           });
+        } else if (status === "pending") {
+          toast.success("調理中に戻しました", {
+            description: "注文ステータスを変更しました",
+          });
         }
       } else {
         throw new Error("Status update failed");

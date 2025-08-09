@@ -116,7 +116,11 @@ export default function CalloutSection({
                       <DropdownMenuContent className="w-36">
                         <DropdownMenuLabel>操作</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem disabled>
+                        <DropdownMenuItem
+                          onSelect={() =>
+                            onUpdateOrderStatusAction(order.id, "pending")
+                          }
+                        >
                           <Undo2 />
                           調理中へ戻す
                         </DropdownMenuItem>
