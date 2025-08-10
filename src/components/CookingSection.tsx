@@ -100,9 +100,7 @@ export default function CookingSection({
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-xl font-bold text-gray-900">
-                    {order.orderNumber
-                      ? order.orderNumber.toString().padStart(3, "0")
-                      : "---"}
+                    {order.orderNumber ? `#${order.orderNumber}` : "---"}
                   </div>
                   <div className="text-gray-600">{order.quantity}杯</div>
                   <div className="text-sm text-gray-500">
@@ -158,9 +156,7 @@ export default function CookingSection({
                           注文を取り消しますか？
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          注文番号{" "}
-                          {order.orderNumber.toString().padStart(3, "0")}{" "}
-                          を取り消します。
+                          注文番号 #{order.orderNumber} を取り消します。
                           <br />
                           この操作は取り消せません。
                         </AlertDialogDescription>
@@ -202,8 +198,7 @@ export default function CookingSection({
           <AlertDialogHeader>
             <AlertDialogTitle>注文を編集</AlertDialogTitle>
             <AlertDialogDescription>
-              注文番号 {editingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
-              の個数を変更できます。
+              注文番号 #{editingOrder?.orderNumber} の個数を変更できます。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -244,8 +239,7 @@ export default function CookingSection({
           <AlertDialogHeader>
             <AlertDialogTitle>注文詳細</AlertDialogTitle>
             <AlertDialogDescription>
-              注文番号 {viewingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
-              の詳細情報
+              注文番号 #{viewingOrder?.orderNumber} の詳細情報
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -263,9 +257,7 @@ export default function CookingSection({
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">注文番号</TableCell>
-                  <TableCell>
-                    {viewingOrder?.orderNumber.toString().padStart(3, "0")}
-                  </TableCell>
+                  <TableCell>#{viewingOrder?.orderNumber}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">個数</TableCell>
