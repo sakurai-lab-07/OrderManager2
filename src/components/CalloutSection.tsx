@@ -23,7 +23,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, Megaphone, Ellipsis, FilePenLine, Undo2 } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { X, Megaphone, Ellipsis, FilePenLine, Undo2, Info } from "lucide-react";
 import { Order } from "@/types/order";
 
 interface CalloutSectionProps {
@@ -44,6 +52,8 @@ export default function CalloutSection({
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editQuantity, setEditQuantity] = useState<number>(1);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
   const readyOrders = orders.filter((order) => order.status === "ready");
 
@@ -51,6 +61,11 @@ export default function CalloutSection({
     setEditingOrder(order);
     setEditQuantity(order.quantity);
     setIsEditDialogOpen(true);
+  };
+
+  const handleViewOrder = (order: Order) => {
+    setViewingOrder(order);
+    setIsViewDialogOpen(true);
   };
 
   const handleSaveEdit = () => {
@@ -85,9 +100,7 @@ export default function CalloutSection({
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-xl font-bold text-green-800">
-                    {order.orderNumber
-                      ? order.orderNumber.toString().padStart(3, "0")
-                      : "---"}
+                    {order.orderNumber ? `#${order.orderNumber}` : "---"}
                   </div>
                   <div className="text-green-700">{order.quantity}杯</div>
                   <div className="text-sm text-green-600">
@@ -117,6 +130,12 @@ export default function CalloutSection({
                         <DropdownMenuLabel>操作</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
+                          onSelect={() => handleViewOrder(order)}
+                        >
+                          <Info />
+                          詳細表示
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onSelect={() =>
                             onUpdateOrderStatusAction(order.id, "pending")
                           }
@@ -130,6 +149,7 @@ export default function CalloutSection({
                           <FilePenLine />
                           編集
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem>
                             <X />
@@ -144,9 +164,7 @@ export default function CalloutSection({
                           注文を取り消しますか？
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                          注文番号{" "}
-                          {order.orderNumber.toString().padStart(3, "0")}{" "}
-                          を取り消します。
+                          注文番号 #{order.orderNumber} を取り消します。
                           <br />
                           この操作は取り消せません。
                         </AlertDialogDescription>
@@ -190,8 +208,7 @@ export default function CalloutSection({
           <AlertDialogHeader>
             <AlertDialogTitle>注文を編集</AlertDialogTitle>
             <AlertDialogDescription>
-              注文番号 {editingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
-              の個数を変更できます。
+              注文番号 #{editingOrder?.orderNumber} の個数を変更できます。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
@@ -222,6 +239,74 @@ export default function CalloutSection({
             >
               保存
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 詳細表示用ダイアログ */}
+      <AlertDialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>注文詳細</AlertDialogTitle>
+            <AlertDialogDescription>
+              注文番号 #{viewingOrder?.orderNumber} の詳細情報
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-32">項目</TableHead>
+                  <TableHead>値</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">注文ID</TableCell>
+                  <TableCell>{viewingOrder?.id}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">注文番号</TableCell>
+                  <TableCell>#{viewingOrder?.orderNumber}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">個数</TableCell>
+                  <TableCell>{viewingOrder?.quantity}杯</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">ステータス</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                      呼び出し中
+                    </span>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">注文時刻</TableCell>
+                  <TableCell>
+                    {viewingOrder?.createdAt
+                      ? new Date(viewingOrder.createdAt).toLocaleString(
+                          "ja-JP",
+                          {
+                            timeZone: "Asia/Tokyo",
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          }
+                        )
+                      : "不明"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsViewDialogOpen(false)}>
+              閉じる
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
