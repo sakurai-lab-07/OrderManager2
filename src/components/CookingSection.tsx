@@ -23,7 +23,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, CookingPot, Ellipsis, FilePenLine } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { X, CookingPot, Ellipsis, FilePenLine, Info } from "lucide-react";
 import { Order } from "@/types/order";
 
 interface CookingSectionProps {
@@ -44,6 +52,8 @@ export default function CookingSection({
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editQuantity, setEditQuantity] = useState<number>(1);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
   const pendingOrders = orders.filter((order) => order.status === "pending");
 
@@ -51,6 +61,11 @@ export default function CookingSection({
     setEditingOrder(order);
     setEditQuantity(order.quantity);
     setIsEditDialogOpen(true);
+  };
+
+  const handleViewOrder = (order: Order) => {
+    setViewingOrder(order);
+    setIsViewDialogOpen(true);
   };
 
   const handleSaveEdit = () => {
@@ -117,11 +132,18 @@ export default function CookingSection({
                         <DropdownMenuLabel>操作</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
+                          onSelect={() => handleViewOrder(order)}
+                        >
+                          <Info />
+                          詳細表示
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onSelect={() => handleEditOrder(order)}
                         >
                           <FilePenLine />
                           編集
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem>
                             <X />
@@ -212,6 +234,77 @@ export default function CookingSection({
             >
               保存
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* 詳細表示用ダイアログ */}
+      <AlertDialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>注文詳細</AlertDialogTitle>
+            <AlertDialogDescription>
+              注文番号 {viewingOrder?.orderNumber.toString().padStart(3, "0")}{" "}
+              の詳細情報
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-32">項目</TableHead>
+                  <TableHead>値</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">注文ID</TableCell>
+                  <TableCell>{viewingOrder?.id}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">注文番号</TableCell>
+                  <TableCell>
+                    {viewingOrder?.orderNumber.toString().padStart(3, "0")}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">個数</TableCell>
+                  <TableCell>{viewingOrder?.quantity}杯</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">ステータス</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">
+                      調理中
+                    </span>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">注文時刻</TableCell>
+                  <TableCell>
+                    {viewingOrder?.createdAt
+                      ? new Date(viewingOrder.createdAt).toLocaleString(
+                          "ja-JP",
+                          {
+                            timeZone: "Asia/Tokyo",
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          }
+                        )
+                      : "不明"}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsViewDialogOpen(false)}>
+              閉じる
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
