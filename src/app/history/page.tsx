@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import { ChevronLeft, Calendar, Clock, Package, Trash2, TrendingUp } from "lucide-react";
+import { ChevronLeft, Calendar, Clock, Package, Trash2, TrendingUp, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, Line, LineChart, Area, AreaChart, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import * as XLSX from 'xlsx';
 
 interface Order {
   id: number;
@@ -169,6 +170,76 @@ export default function HistoryPage() {
   const getTotalQuantity = () => filteredOrders
     .filter(order => !order.deletedAt) // 取り消されていない注文のみ
     .reduce((sum, order) => sum + order.quantity, 0);
+
+  // エクスポート用のデータを準備
+  const prepareExportData = () => {
+    return filteredOrders.map(order => {
+      const { date, time } = formatDateTime(order.createdAt);
+      let status = "";
+      if (order.deletedAt) {
+        status = "取消済み";
+      } else {
+        switch (order.status) {
+          case "pending": status = "調理中"; break;
+          case "ready": status = "呼び出し中"; break;
+          case "completed": status = "完了"; break;
+          default: status = order.status;
+        }
+      }
+      
+      return {
+        "注文番号": `#${order.orderNumber}`,
+        "数量": order.quantity,
+        "ステータス": status,
+        "注文日": date,
+        "注文時刻": time,
+      };
+    });
+  };
+
+  // CSVエクスポート
+  const exportToCSV = () => {
+    const data = prepareExportData();
+    const ws = XLSX.utils.json_to_sheet(data);
+    const csv = XLSX.utils.sheet_to_csv(ws);
+    
+    const periodLabel = selectedDate === "all" ? "全期間" : availableDates.find(d => d.value === selectedDate)?.label || selectedDate;
+    const filename = `注文履歴_${periodLabel}_${new Date().toISOString().split('T')[0]}.csv`;
+    
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Excelエクスポート
+  const exportToExcel = () => {
+    const data = prepareExportData();
+    const ws = XLSX.utils.json_to_sheet(data);
+    
+    // 列幅を調整
+    const colWidths = [
+      { wch: 12 }, // 注文番号
+      { wch: 8 },  // 数量
+      { wch: 12 }, // ステータス
+      { wch: 12 }, // 注文日
+      { wch: 10 }, // 注文時刻
+    ];
+    ws['!cols'] = colWidths;
+    
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '注文履歴');
+    
+    const periodLabel = selectedDate === "all" ? "全期間" : availableDates.find(d => d.value === selectedDate)?.label || selectedDate;
+    const filename = `注文履歴_${periodLabel}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    
+    XLSX.writeFile(wb, filename);
+  };
 
   // 時間帯別の注文データを生成
   const hourlyOrderData = useMemo(() => {
@@ -455,12 +526,38 @@ export default function HistoryPage() {
         {/* Table */}
         <div className="bg-white rounded-lg shadow">
           <div className="p-4">
-            <h2 className="text-xl font-semibold text-gray-900 p-2">
-              {selectedDate === "all" 
-                ? "全期間の注文履歴" 
-                : `${availableDates.find(d => d.value === selectedDate)?.label} の注文履歴`
-              }
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {selectedDate === "all" 
+                  ? "全期間の注文履歴" 
+                  : `${availableDates.find(d => d.value === selectedDate)?.label} の注文履歴`
+                }
+              </h2>
+              
+              {/* エクスポートボタン */}
+              {filteredOrders.length > 0 && (
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={exportToCSV}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    CSV
+                  </Button>
+                  <Button 
+                    onClick={exportToExcel}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    XLSX
+                  </Button>
+                </div>
+              )}
+            </div>
             
             {loading ? (
               <div className="text-center py-8">
