@@ -199,7 +199,9 @@ export default function HistoryPage() {
               axisLine={false}
               tickFormatter={(value) => value}
             />
-            <YAxis />
+            <YAxis 
+              label={{ value: '件数', angle: -90, position: 'insideLeft' }}
+            />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
@@ -234,7 +236,9 @@ export default function HistoryPage() {
               axisLine={false}
               tickFormatter={(value) => value}
             />
-            <YAxis />
+            <YAxis 
+              label={{ value: '件数', angle: -90, position: 'insideLeft' }}
+            />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
