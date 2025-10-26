@@ -138,7 +138,9 @@ export default function HistoryPage() {
   const getTotalOrders = () => filteredOrders.length;
   const getCompletedOrders = () => filteredOrders.filter(order => order.status === "completed").length;
   const getCancelledOrders = () => filteredOrders.filter(order => order.deletedAt).length;
-  const getTotalQuantity = () => filteredOrders.reduce((sum, order) => sum + order.quantity, 0);
+  const getTotalQuantity = () => filteredOrders
+    .filter(order => !order.deletedAt) // 取り消されていない注文のみ
+    .reduce((sum, order) => sum + order.quantity, 0);
 
   // 時間帯別の注文データを生成
   const hourlyOrderData = useMemo(() => {
