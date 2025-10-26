@@ -19,6 +19,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, Line, LineChart, Area, AreaChart, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -222,6 +224,7 @@ export default function HistoryPage() {
               name="提供数"
               type="monotone"
             />
+            <ChartLegend content={<ChartLegendContent />} />
           </LineChart>
         );
 
@@ -261,6 +264,7 @@ export default function HistoryPage() {
               name="提供数"
               type="monotone"
             />
+            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         );
 
@@ -291,6 +295,7 @@ export default function HistoryPage() {
               radius={4}
               name="提供数"
             />
+            <ChartLegend content={<ChartLegendContent />} />
           </BarChart>
         );
     }
