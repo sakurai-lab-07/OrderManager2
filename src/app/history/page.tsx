@@ -59,10 +59,19 @@ export default function HistoryPage() {
     }
     
     return orders.filter(order => {
-      const orderDate = new Date(order.createdAt);
-      const jstDate = new Date(orderDate.getTime() + (9 * 60 * 60 * 1000));
-      const orderDateString = jstDate.toISOString().split('T')[0];
-      return orderDateString === selectedDate;
+      // UTCとして解釈し、JSTタイムゾーンで日付を取得
+      const utcDate = new Date(order.createdAt + (order.createdAt.includes('Z') ? '' : 'Z'));
+      const jstFormatter = new Intl.DateTimeFormat("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const orderDateString = jstFormatter.format(utcDate).replace(/\//g, '-');
+      // YYYY-MM-DD形式に変換
+      const parts = orderDateString.split('-');
+      const formattedDate = `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+      return formattedDate === selectedDate;
     });
   }, [orders, selectedDate]);
 
@@ -102,20 +111,27 @@ export default function HistoryPage() {
   };
 
   const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    // UTC時間に9時間を追加してJST（日本標準時）に変換
-    const jstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+    // UTCとして解釈し、JSTに変換
+    const utcDate = new Date(dateString + (dateString.includes('Z') ? '' : 'Z'));
+    
+    // Intl.DateTimeFormatを使用してJST時間を正確に取得
+    const jstFormatter = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    
+    const jstTimeFormatter = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
     
     return {
-      date: jstDate.toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      }),
-      time: jstDate.toLocaleTimeString("ja-JP", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      date: jstFormatter.format(utcDate),
+      time: jstTimeFormatter.format(utcDate),
     };
   };
 
@@ -134,9 +150,14 @@ export default function HistoryPage() {
 
     filteredOrders.forEach(order => {
       if (!order.deletedAt) { // 削除された注文は除外
-        const date = new Date(order.createdAt);
-        const jstDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
-        const hour = jstDate.getHours();
+        // UTCとして解釈し、JSTタイムゾーンで時間を取得
+        const utcDate = new Date(order.createdAt + (order.createdAt.includes('Z') ? '' : 'Z'));
+        const jstTimeFormatter = new Intl.DateTimeFormat("ja-JP", {
+          timeZone: "Asia/Tokyo",
+          hour: "numeric",
+          hour12: false,
+        });
+        const hour = parseInt(jstTimeFormatter.format(utcDate));
         
         hourlyStats[hour].orders += 1;
         hourlyStats[hour].quantity += order.quantity;
