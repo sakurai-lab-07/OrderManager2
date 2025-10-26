@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 import { ChevronLeft, Calendar, Clock, Package, Trash2, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -49,9 +50,9 @@ export default function HistoryPage() {
 
   // チャートタイプのオプション
   const chartTypes = [
-    { value: "bar", label: "バーチャート" },
-    { value: "line", label: "ラインチャート" },
-    { value: "area", label: "エリアチャート" },
+    { value: "bar", label: "Bar" },
+    { value: "line", label: "Line" },
+    { value: "area", label: "Area" },
   ];
 
   // 日付でフィルターされた注文データ
@@ -97,18 +98,43 @@ export default function HistoryPage() {
 
   const getStatusBadge = (status: string, deletedAt?: string) => {
     if (deletedAt) {
-      return <Badge variant="destructive">取消済み</Badge>;
+      return (
+        <div className="flex items-center">
+          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <span className="text-red-700"></span>
+        </div>
+      );
     }
     
     switch (status) {
       case "pending":
-        return <Badge variant="secondary">調理中</Badge>;
+        return (
+          <div className="flex items-center">
+            <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+            <span className="text-gray-700"></span>
+          </div>
+        );
       case "ready":
-        return <Badge variant="default">呼び出し中</Badge>;
+        return (
+          <div className="flex items-center">
+            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+            <span className="text-blue-700"></span>
+          </div>
+        );
       case "completed":
-        return <Badge variant="outline">完了</Badge>;
+        return (
+          <div className="flex items-center">
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            <span className="text-green-700"></span>
+          </div>
+        );
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return (
+          <div className="flex items-center">
+            <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+            <span className="text-gray-700">{status}</span>
+          </div>
+        );
     }
   };
 
@@ -302,7 +328,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-5">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -381,25 +407,29 @@ export default function HistoryPage() {
           {filteredOrders.length > 0 && (
             <Card className="mb-6">
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
+                <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+                  <div className="flex-1">
+                    <CardTitle className="flex items-center gap-2 text-xl">
                       <TrendingUp className="w-5 h-5" />
-                      時間帯別注文状況 
-                      {selectedDate !== "all" && 
-                        ` (${availableDates.find(d => d.value === selectedDate)?.label})`
-                      }
+                      <span className="break-words">
+                        時間帯別注文状況 
+                        {selectedDate !== "all" && (
+                          <span className="block sm:inline">
+                            ({availableDates.find(d => d.value === selectedDate)?.label})
+                          </span>
+                        )}
+                      </span>
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="mt-2 text-sm">
                       {selectedDate === "all" 
                         ? "全期間の注文パターンを時間帯別に表示しています"
                         : "選択した日付の注文パターンを時間帯別に表示しています"
                       }
                     </CardDescription>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex justify-end lg:justify-start">
                     <Select value={chartType} onValueChange={setChartType}>
-                      <SelectTrigger className="w-[150px]">
+                      <SelectTrigger className="w-full lg:w-[150px]">
                         <SelectValue placeholder="チャート種類" />
                       </SelectTrigger>
                       <SelectContent>
@@ -413,7 +443,7 @@ export default function HistoryPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4">
                 <ChartContainer config={chartConfig}>
                   {renderChart()}
                 </ChartContainer>
@@ -424,8 +454,8 @@ export default function HistoryPage() {
 
         {/* Table */}
         <div className="bg-white rounded-lg shadow">
-          <div className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="p-4">
+            <h2 className="text-xl font-semibold text-gray-900 p-2">
               {selectedDate === "all" 
                 ? "全期間の注文履歴" 
                 : `${availableDates.find(d => d.value === selectedDate)?.label} の注文履歴`
@@ -451,11 +481,11 @@ export default function HistoryPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>注文番号</TableHead>
+                    <TableHead>番号</TableHead>
                     <TableHead>数量</TableHead>
-                    <TableHead>ステータス</TableHead>
-                    <TableHead>注文日時</TableHead>
-                    <TableHead>注文時刻</TableHead>
+                    <TableHead>状況</TableHead>
+                    <TableHead>日時</TableHead>
+                    <TableHead>時刻</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -466,7 +496,7 @@ export default function HistoryPage() {
                         <TableCell className="font-medium">
                           #{order.orderNumber}
                         </TableCell>
-                        <TableCell>{order.quantity}個</TableCell>
+                        <TableCell>{order.quantity}</TableCell>
                         <TableCell>
                           {getStatusBadge(order.status, order.deletedAt)}
                         </TableCell>
@@ -481,6 +511,7 @@ export default function HistoryPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
