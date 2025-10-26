@@ -67,7 +67,7 @@ export default function NewOrderSection({
 
         <Button
           onClick={handleCreateOrder}
-          disabled={isLoading}
+          disabled/*={isLoading}*/
           className="w-full bg-black py-3 px-4 rounded-lg font-medium disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? "注文中..." : "注文する"}
